@@ -1,5 +1,5 @@
 import os
-from osc import VRChatOSCReceiver, VRChatOSC, EyeId
+from osc import EyeId
 from config import EyeTrackConfig
 from camera_widget import CameraWidget
 from settings_widget import SettingsWidget
@@ -83,12 +83,12 @@ def main():
 
     # Check to see if we have an ROI. If not, bring up ROI finder GUI.
 
-    # Spawn worker threads
+    # # Spawn worker threads
     osc_queue: queue.Queue[tuple[bool, int, int]] = queue.Queue()
-    osc = VRChatOSC(cancellation_event, osc_queue, config)
-    osc_thread = threading.Thread(target=osc.run)
-    # start worker threads
-    osc_thread.start()
+    # osc = VRChatOSC(cancellation_event, osc_queue, config)
+    # osc_thread = threading.Thread(target=osc.run)
+    # # start worker threads
+    # osc_thread.start()
 
     eyes = [
         CameraWidget(EyeId.RIGHT, config, osc_queue),
@@ -164,9 +164,9 @@ def main():
         settings[0].start()
 
     # the eye's needs to be running before it is passed to the OSC
-    osc_receiver = VRChatOSCReceiver(cancellation_event, config, eyes)
-    osc_receiver_thread = threading.Thread(target=osc_receiver.run)
-    osc_receiver_thread.start()
+    # osc_receiver = VRChatOSCReceiver(cancellation_event, config, eyes)
+    # osc_receiver_thread = threading.Thread(target=osc_receiver.run)
+    # osc_receiver_thread.start()
 
     # Create the window
     window = sg.Window(f"EyeTrackVR {appversion}" , layout, icon='Images/logo.ico', background_color='#292929')
@@ -182,13 +182,13 @@ def main():
                 eye.stop()
             cancellation_event.set()
             # shut down worker threads
-            osc_thread.join()
+            # osc_thread.join()
             # TODO: find a way to have this function run on join maybe??
             # threading.Event() wont work because pythonosc spawns its own thread.
             # only way i can see to get around this is an ugly while loop that only checks if a threading event is triggered
             # and then call the pythonosc shutdown function
-            osc_receiver.shutdown()
-            osc_receiver_thread.join()
+            # osc_receiver.shutdown()
+            # osc_receiver_thread.join()
             print("Exiting EyeTrackApp")
             return
 
