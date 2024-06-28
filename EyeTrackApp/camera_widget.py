@@ -313,6 +313,7 @@ class CameraWidget:
                     graph.update(background_color="white")
 
                     try:
+                        print('X:', eye_info.x, 'Y:', eye_info.y)
                         graph.draw_circle(
                             (eye_info.x * -100, eye_info.y * -100),
                             25,
