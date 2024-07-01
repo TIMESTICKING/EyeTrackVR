@@ -18,8 +18,8 @@ class EyeGazeCalibration:
         self.eye_gaze_points = np.array(self.eye_gaze_points)
         
         # 使用griddata进行插值
-        self.interpolated_x = griddata(self.eye_gaze_points, self.screen_points[:, 0], (self.grid_x, self.grid_y), method='cubic')
-        self.interpolated_y = griddata(self.eye_gaze_points, self.screen_points[:, 1], (self.grid_x, self.grid_y), method='cubic')
+        self.interpolated_x = griddata(self.eye_gaze_points, self.screen_points[:, 0], (self.grid_x, self.grid_y), method='linear')
+        self.interpolated_y = griddata(self.eye_gaze_points, self.screen_points[:, 1], (self.grid_x, self.grid_y), method='linear')
 
     def predict(self, eye_gaze_point):
         ex, ey = eye_gaze_point
@@ -34,15 +34,16 @@ if __name__ == '__main__':
     # 示例使用
     calibration = EyeGazeCalibration()
 
-    # 添加16个均匀分布的标定点及对应的眼动坐标
+    # 添加更多的标定点及对应的眼动坐标
     calibration_points = [
         ((0.0, 0.0), (0.0, 0.0)), ((0.25, 0.0), (0.2, 0.1)), ((0.5, 0.0), (0.4, 0.2)), ((0.75, 0.0), (0.6, 0.3)),
-        ((1.0, 0.0), (0.8, 0.4)), ((0.0, 0.25), (-0.1, 0.2)), ((0.25, 0.25), (0.1, 0.3)), ((0.5, 0.25), (0.3, 0.4)),
-        ((0.75, 0.25), (0.5, 0.5)), ((1.0, 0.25), (0.7, 0.6)), ((0.0, 0.5), (-0.2, 0.4)), ((0.25, 0.5), (0.0, 0.5)),
-        ((0.5, 0.5), (0.2, 0.6)), ((0.75, 0.5), (0.4, 0.7)), ((1.0, 0.5), (0.6, 0.8)), ((0.0, 0.75), (-0.3, 0.6)),
-        ((0.25, 0.75), (-0.1, 0.7)), ((0.5, 0.75), (0.1, 0.8)), ((0.75, 0.75), (0.3, 0.9)), ((1.0, 0.75), (0.5, 1.0)),
-        ((0.0, 1.0), (-0.4, 0.8)), ((0.25, 1.0), (-0.2, 0.9)), ((0.5, 1.0), (0.0, 1.0)), ((0.75, 1.0), (0.2, 1.1)),
-        ((1.0, 1.0), (0.4, 1.0))
+        ((1.0, 0.0), (0.8, 0.4)), ((0.0, 0.25), (0.1, 0.2)), ((0.25, 0.25), (0.1, 0.3)), ((0.5, 0.25), (0.3, 0.4)),
+        ((0.75, 0.25), (0.5, 0.5)), ((1.0, 0.25), (0.7, 0.6)), ((0.0, 0.5), (0.2, 0.4)), ((0.25, 0.5), (0.0, 0.5)),
+        ((0.5, 0.5), (0.2, 0.6)), ((0.75, 0.5), (0.4, 0.7)), ((1.0, 0.5), (0.6, 0.8)), ((0.0, 0.75), (0.3, 0.6)),
+        ((0.25, 0.75), (0.1, 0.7)), ((0.5, 0.75), (0.1, 0.8)), ((0.75, 0.75), (0.3, 0.9)), ((1.0, 0.75), (0.5, 1.0)),
+        ((0.0, 1.0), (0.4, 0.8)), ((0.25, 1.0), (0.2, 0.9)), ((0.5, 1.0), (0.0, 1.0)), ((0.75, 1.0), (0.2, 1.1)),
+        ((1.0, 1.0), (0.4, 1.0)), ((0.1, 0.1), (0.1, 0.1)), ((0.9, 0.1), (0.9, 0.1)),
+        ((0.1, 0.9), (0.1, 0.9)), ((0.9, 0.9), (0.9, 0.9)), ((0.5, 0.2), (0.5, 0.2))
     ]
 
     for screen_point, eye_gaze_point in calibration_points:
@@ -52,7 +53,7 @@ if __name__ == '__main__':
     calibration.calibrate()
 
     # 预测新的眼动坐标对应的屏幕点
-    eye_gaze_point = (0.8, 0.4)
+    eye_gaze_point = (0.4, 0.7)
     predicted_screen_point = calibration.predict(eye_gaze_point)
 
     print(f"Predicted screen point for eye gaze {eye_gaze_point}: {predicted_screen_point}")
